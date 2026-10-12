@@ -1,0 +1,51 @@
+# Rendered at start-up by the nginx entrypoint (envsubst) into
+# /tmp/nginx/default.conf. ${OLD_HOST}, ${NEW_HOST} and ${NEW_URL} are set by
+# /docker-entrypoint.d/05-moved-site.envsh from OLD_URL / NEW_URL.
+
+server {
+    listen 8080 default_server;
+    server_name _;
+    root /usr/share/nginx/html;
+
+    server_tokens off;
+    charset utf-8;
+
+    gzip on;
+    gzip_types text/css application/javascript image/svg+xml;
+
+    location = /healthz {
+        access_log off;
+        default_type text/plain;
+        return 200 "ok\n";
+    }
+
+    location = /robots.txt {
+        default_type text/plain;
+        return 200 "User-agent: *\nDisallow: /\n";
+    }
+
+    location = /favicon.ico {
+        access_log off;
+        log_not_found off;
+        return 404;
+    }
+
+    location /assets/ {
+        include /etc/nginx/snippets/security-headers.conf;
+        add_header Cache-Control "public, max-age=3600" always;
+        try_files $uri =404;
+    }
+
+    # Every other path shows the notice, so deep links from old bookmarks
+    # land here too. The page itself rebuilds the link on the new host.
+    location / {
+        include /etc/nginx/snippets/security-headers.conf;
+        add_header Cache-Control "no-store" always;
+        try_files /index.html =404;
+
+        sub_filter_once off;
+        sub_filter '__OLD_HOST__' '${OLD_HOST}';
+        sub_filter '__NEW_HOST__' '${NEW_HOST}';
+        sub_filter '__NEW_URL__' '${NEW_URL}';
+    }
+}

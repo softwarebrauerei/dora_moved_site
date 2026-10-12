@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en" data-new-url="__NEW_URL__">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light dark">
+  <title>Dora has moved</title>
+  <meta name="description" content="Dora is now available at __NEW_HOST__. Please update your bookmarks.">
+  <link rel="icon" href="/assets/favicon-32x32-dark.png" sizes="32x32" type="image/png" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="/assets/favicon-16x16-dark.png" sizes="16x16" type="image/png" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="/assets/favicon-32x32.png" sizes="32x32" type="image/png" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/assets/favicon-16x16.png" sizes="16x16" type="image/png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180">
+  <link rel="preload" href="/assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/app.js" defer></script>
+</head>
+<body>
+  <canvas class="network" aria-hidden="true"></canvas>
+  <div class="fade" aria-hidden="true"></div>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <span class="badge"><span class="badge-dot"></span>Dora has moved</span>
+
+        <h1>Dora has a home</h1>
+
+        <p class="lead">
+          Dora is now available at <strong class="host">__NEW_HOST__</strong>.
+          The old address <span class="host">__OLD_HOST__</span> is no longer in use –
+          please update your bookmarks.
+        </p>
+
+        <div class="card move">
+          <div class="move-row">
+            <span class="label">Old address</span>
+            <div class="move-host move-old"><s class="host">__OLD_HOST__</s></div>
+          </div>
+          <div class="move-arrow" aria-hidden="true">
+            <svg viewBox="0 0 256 256" width="16" height="16" fill="currentColor"><path d="M205.66,149.66l-72,72a8,8,0,0,1-11.32,0l-72-72a8,8,0,0,1,11.32-11.32L120,196.69V40a8,8,0,0,1,16,0V196.69l58.34-58.35a8,8,0,0,1,11.32,11.32Z"/></svg>
+          </div>
+          <div class="move-row">
+            <span class="label">New address</span>
+            <a class="move-host move-new js-target" href="__NEW_URL__">
+              <svg class="lock" aria-hidden="true" viewBox="0 0 256 256" width="16" height="16" fill="currentColor"><path d="M208,80H176V56a48,48,0,0,0-96,0V80H48A16,16,0,0,0,32,96V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V96A16,16,0,0,0,208,80ZM96,56a32,32,0,0,1,64,0V80H96ZM208,208H48V96H208V208Z"/></svg>
+              <span class="host">__NEW_HOST__</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn btn-primary js-target" href="__NEW_URL__">
+            Go to the new address
+            <svg class="arrow" aria-hidden="true" viewBox="0 0 256 256" width="16" height="16" fill="currentColor"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+          </a>
+          <button type="button" class="btn btn-outline js-copy" hidden>
+            <svg class="icon-copy" aria-hidden="true" viewBox="0 0 256 256" width="16" height="16" fill="currentColor"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></svg>
+            <svg class="icon-check" aria-hidden="true" viewBox="0 0 256 256" width="16" height="16" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>
+            <span class="js-copy-label">Copy address</span>
+          </button>
+        </div>
+
+        <p class="deeplink" hidden>
+          You opened a link to a specific page. The button takes you straight there:
+          <a class="js-target js-target-text" href="__NEW_URL__">__NEW_URL__</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="steps" aria-labelledby="steps-title">
+      <div class="container">
+        <div class="steps-intro">
+          <h2 id="steps-title">Update your bookmarks in three steps</h2>
+          <p>Old bookmarks only lead to this page.</p>
+        </div>
+        <ol class="steps-grid">
+          <li class="card step">
+            <div class="step-head">
+              <span class="step-icon"><svg aria-hidden="true" viewBox="0 0 256 256" width="24" height="24" fill="currentColor"><path d="M224,104a8,8,0,0,1-16,0V59.32l-66.33,66.34a8,8,0,0,1-11.32-11.32L196.68,48H152a8,8,0,0,1,0-16h64a8,8,0,0,1,8,8Zm-40,24a8,8,0,0,0-8,8v72H48V80h72a8,8,0,0,0,0-16H48A16,16,0,0,0,32,80V208a16,16,0,0,0,16,16H176a16,16,0,0,0,16-16V136A8,8,0,0,0,184,128Z"/></svg></span>
+              <span class="step-no">01</span>
+            </div>
+            <h3>Open the new address</h3>
+            <p>Click “Go to the new address” and sign in.</p>
+          </li>
+          <li class="card step">
+            <div class="step-head">
+              <span class="step-icon"><svg aria-hidden="true" viewBox="0 0 256 256" width="24" height="24" fill="currentColor"><path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,177.57-51.77-32.35a8,8,0,0,0-8.48,0L72,209.57V48H184Z"/></svg></span>
+              <span class="step-no">02</span>
+            </div>
+            <h3>Bookmark it</h3>
+            <p>Save the new page as a bookmark with <span class="nowrap"><kbd>⌘</kbd> <kbd>D</kbd></span> (Mac) or <span class="nowrap"><kbd>Ctrl</kbd> <kbd>D</kbd></span> (Windows).</p>
+          </li>
+          <li class="card step">
+            <div class="step-head">
+              <span class="step-icon"><svg aria-hidden="true" viewBox="0 0 256 256" width="24" height="24" fill="currentColor"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg></span>
+              <span class="step-no">03</span>
+            </div>
+            <h3>Delete the old bookmark</h3>
+            <p>Remove bookmarks and shortcuts pointing to <span class="host">__OLD_HOST__</span> so you no longer end up here.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <span class="footer-label">Questions about the move? <a href="mailto:contact@software-brauerei.ch">contact@software-brauerei.ch</a></span>
+    <span class="footer-mono">Dietikon · Software Brauerei AG</span>
+  </footer>
+</body>
+</html>

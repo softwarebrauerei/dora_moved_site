@@ -1,0 +1,6 @@
+.git
+.github
+k8s
+scripts
+*.md
+.DS_Store

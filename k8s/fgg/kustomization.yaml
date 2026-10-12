@@ -1,0 +1,40 @@
+# fgg.app.arqh.ai -> fgg.dora.cust.sobr-brews.ch
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dora-moved-site
+nameSuffix: -fgg
+
+labels:
+  - pairs:
+      app.kubernetes.io/instance: fgg
+    includeSelectors: true
+
+resources:
+  - ../base
+
+patches:
+  - target:
+      kind: Deployment
+      name: dora-moved-site
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: OLD_URL
+            value: https://fgg.app.arqh.ai
+          - name: NEW_URL
+            value: https://fgg.dora.cust.sobr-brews.ch
+  - target:
+      kind: Ingress
+      name: dora-moved-site
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: fgg.app.arqh.ai
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: fgg.app.arqh.ai
+      - op: replace
+        path: /spec/tls/0/secretName
+        value: dora-moved-site-fgg-tls

@@ -1,0 +1,40 @@
+# carlsbrgno-staging.app.arqh.ai -> carlsbrgno-staging.dora.cust.sobr-brews.ch
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dora-moved-site
+nameSuffix: -carlsbrgno-staging
+
+labels:
+  - pairs:
+      app.kubernetes.io/instance: carlsbrgno-staging
+    includeSelectors: true
+
+resources:
+  - ../base
+
+patches:
+  - target:
+      kind: Deployment
+      name: dora-moved-site
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: OLD_URL
+            value: https://carlsbrgno-staging.app.arqh.ai
+          - name: NEW_URL
+            value: https://carlsbrgno-staging.dora.cust.sobr-brews.ch
+  - target:
+      kind: Ingress
+      name: dora-moved-site
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: carlsbrgno-staging.app.arqh.ai
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: carlsbrgno-staging.app.arqh.ai
+      - op: replace
+        path: /spec/tls/0/secretName
+        value: dora-moved-site-carlsbrgno-staging-tls

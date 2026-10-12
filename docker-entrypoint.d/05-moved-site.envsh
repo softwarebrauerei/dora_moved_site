@@ -1,0 +1,39 @@
+#!/bin/sh
+# Sourced by /docker-entrypoint.sh before 20-envsubst-on-templates.sh renders
+# the nginx config. Checks OLD_URL / NEW_URL and derives the host names the
+# page shows. A bad value stops the container instead of serving a broken page.
+
+moved_site_origin() {
+    moved_site_value=$2
+    case "$moved_site_value" in
+        http://* | https://*) ;;
+        *) moved_site_value="https://$moved_site_value" ;;
+    esac
+    moved_site_value=${moved_site_value%/}
+    # Origins only (scheme, host, optional port): the value ends up in HTML,
+    # JS and the nginx config, so nothing else may get through.
+    case "$moved_site_value" in
+        *[!A-Za-z0-9.:/-]*) moved_site_value= ;;
+    esac
+    if ! printf '%s' "$moved_site_value" |
+        grep -Eq '^https?://[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?(:[0-9]{1,5})?$'; then
+        echo "05-moved-site.envsh: $1 must be an origin like https://fgg.app.arqh.ai, got '$2'" >&2
+        return 1
+    fi
+    printf '%s' "$moved_site_value"
+}
+
+if [ -z "${OLD_URL:-}" ] || [ -z "${NEW_URL:-}" ]; then
+    echo "05-moved-site.envsh: OLD_URL and NEW_URL are required," \
+        "e.g. OLD_URL=https://fgg.app.arqh.ai NEW_URL=https://fgg.dora.cust.sobr-brews.ch" >&2
+    exit 1
+fi
+
+OLD_URL=$(moved_site_origin OLD_URL "$OLD_URL") || exit 1
+NEW_URL=$(moved_site_origin NEW_URL "$NEW_URL") || exit 1
+OLD_HOST=${OLD_URL#*://}
+NEW_HOST=${NEW_URL#*://}
+export OLD_URL NEW_URL OLD_HOST NEW_HOST
+
+echo "05-moved-site.envsh: showing $OLD_HOST -> $NEW_URL"
+mkdir -p "$NGINX_ENVSUBST_OUTPUT_DIR"

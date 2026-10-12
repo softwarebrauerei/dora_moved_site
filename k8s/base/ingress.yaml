@@ -1,0 +1,26 @@
+# Matches the arqh-stamp chart on the AKS cluster: ingress-nginx and a
+# cert-manager ClusterIssuer "letsencrypt-prod". Change both if the cluster
+# routes differently. Host and TLS secret are set per domain in the overlays.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dora-moved-site
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - old.example.com
+      secretName: dora-moved-site-tls
+  rules:
+    - host: old.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dora-moved-site
+                port:
+                  name: http
