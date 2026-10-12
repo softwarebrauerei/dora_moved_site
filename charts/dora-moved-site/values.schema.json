@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["tenants", "image"],
+  "properties": {
+    "tenants": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[a-z0-9]([-a-z0-9]*[a-z0-9])?$",
+        "maxLength": 40
+      },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["oldUrl", "newUrl"],
+        "additionalProperties": false,
+        "properties": {
+          "oldUrl": { "$ref": "#/definitions/origin" },
+          "newUrl": { "$ref": "#/definitions/origin" },
+          "enabled": { "type": "boolean" },
+          "host": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?$"
+          },
+          "tlsSecretName": {
+            "type": "string",
+            "pattern": "^[a-z0-9]([-a-z0-9.]*[a-z0-9])?$"
+          }
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "required": ["repository"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "tag": { "type": "string" },
+        "pullPolicy": { "enum": ["Always", "IfNotPresent", "Never"] }
+      }
+    },
+    "replicaCount": { "type": "integer", "minimum": 0 },
+    "service": {
+      "type": "object",
+      "properties": { "port": { "type": "integer", "minimum": 1, "maximum": 65535 } }
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "className": { "type": "string" },
+        "annotations": { "type": "object" },
+        "tls": { "type": "boolean" }
+      }
+    }
+  },
+  "definitions": {
+    "origin": {
+      "description": "Origin only (scheme, host, optional port), e.g. https://fgg.app.arqh.ai. Same rule as the container's start-up check.",
+      "type": "string",
+      "pattern": "^(https?://)?[A-Za-z0-9]([A-Za-z0-9.-]*[A-Za-z0-9])?(:[0-9]{1,5})?/?$"
+    }
+  }
+}

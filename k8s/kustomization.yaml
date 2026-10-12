@@ -1,9 +1,0 @@
-# Everything at once: kubectl apply -k k8s/
-# One domain only:    kubectl apply -k k8s/fgg  (after creating the namespace)
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-resources:
-  - namespace.yaml
-  - fgg
-  - carlsbrgno-staging

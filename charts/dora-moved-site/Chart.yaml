@@ -1,0 +1,10 @@
+apiVersion: v2
+name: dora-moved-site
+description: '"Dora has moved" page for the old *.app.arqh.ai tenant hosts, one small nginx deployment per tenant'
+type: application
+version: 1.0.0
+# image tag used when image.tag is empty
+appVersion: "1.0.0"
+home: https://github.com/softwarebrauerei/dora_moved_site
+sources:
+  - https://github.com/softwarebrauerei/dora_moved_site

@@ -1,6 +1,6 @@
 .git
 .github
-k8s
+charts
 scripts
 *.md
 .DS_Store

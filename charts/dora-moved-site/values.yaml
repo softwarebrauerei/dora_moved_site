@@ -1,0 +1,59 @@
+# One entry per tenant host that has moved. The key names the tenant's
+# Deployment, Service and Ingress (<release>-<key>). It must be lowercase
+# letters, digits and dashes.
+#
+#   oldUrl         old address, shown crossed out; its host is the Ingress host
+#   newUrl         where Dora lives now
+#   enabled        optional, set to false to skip a tenant (default true)
+#   host           optional, Ingress host if it differs from oldUrl's host
+#   tlsSecretName  optional, TLS secret for the Ingress
+#                  (default <release>-<key>-tls, issued by cert-manager)
+#
+# URLs are origins only: scheme, host and optional port, no path.
+tenants:
+  fgg:
+    oldUrl: https://fgg.app.arqh.ai
+    newUrl: https://fgg.dora.cust.sobr-brews.ch
+  carlsbrgno-staging:
+    oldUrl: https://carlsbrgno-staging.app.arqh.ai
+    newUrl: https://carlsbrgno-staging.dora.cust.sobr-brews.ch
+
+image:
+  repository: ghcr.io/softwarebrauerei/dora_moved_site
+  # defaults to the chart's appVersion
+  tag: ""
+  pullPolicy: IfNotPresent
+
+# The image is public, no pull secret needed.
+imagePullSecrets: []
+
+# Per tenant. One is enough for a static notice page and saves pod slots.
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 5m
+    memory: 16Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi
+
+service:
+  port: 80
+
+ingress:
+  enabled: true
+  # same setup as the arqh-stamp chart: ingress-nginx + cert-manager
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  # false: no tls section, e.g. when TLS ends at a load balancer in front
+  tls: true
+
+podAnnotations: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+nameOverride: ""
+fullnameOverride: ""

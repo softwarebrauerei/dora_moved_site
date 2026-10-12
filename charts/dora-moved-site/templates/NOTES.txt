@@ -1,0 +1,14 @@
+"Dora has moved" page, release {{ .Release.Name }} in namespace {{ .Release.Namespace }}:
+{{ range $tenant, $t := .Values.tenants }}
+{{- if eq (include "dora-moved-site.enabled" $t) "true" }}
+  {{ $tenant }}: {{ include "dora-moved-site.host" $t }} -> {{ $t.newUrl }}
+{{- end }}
+{{- end }}
+
+Check:
+  kubectl -n {{ .Release.Namespace }} get pods,ingress{{ if and .Values.ingress.enabled .Values.ingress.tls }},certificate{{ end }} -l app.kubernetes.io/instance={{ .Release.Name }}
+{{- range $tenant, $t := .Values.tenants }}
+{{- if eq (include "dora-moved-site.enabled" $t) "true" }}
+  curl -s https://{{ include "dora-moved-site.host" $t }}/healthz
+{{- end }}
+{{- end }}

@@ -1,0 +1,92 @@
+{{- range $tenant, $t := .Values.tenants }}
+{{- if eq (include "dora-moved-site.enabled" $t) "true" }}
+{{- $ctx := dict "root" $ "tenant" $tenant }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dora-moved-site.tenantName" $ctx }}
+  labels:
+    {{- include "dora-moved-site.labels" $ | nindent 4 }}
+    dora-moved-site/tenant: {{ $tenant }}
+spec:
+  replicas: {{ $.Values.replicaCount }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      {{- include "dora-moved-site.selectorLabels" $ctx | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "dora-moved-site.labels" $ | nindent 8 }}
+        dora-moved-site/tenant: {{ $tenant }}
+      {{- with $.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      {{- with $.Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: nginx
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          env:
+            - name: OLD_URL
+              value: {{ $t.oldUrl | quote }}
+            - name: NEW_URL
+              value: {{ $t.newUrl | quote }}
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 30
+          {{- with $.Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        # nginx writes its rendered config, pid and temp files here
+        - name: tmp
+          emptyDir:
+            sizeLimit: 16Mi
+      {{- with $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $.Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+{{- end }}

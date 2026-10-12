@@ -1,0 +1,42 @@
+{{- if .Values.ingress.enabled }}
+{{- range $tenant, $t := .Values.tenants }}
+{{- if eq (include "dora-moved-site.enabled" $t) "true" }}
+{{- $ctx := dict "root" $ "tenant" $tenant }}
+{{- $name := include "dora-moved-site.tenantName" $ctx }}
+{{- $host := include "dora-moved-site.host" $t }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "dora-moved-site.labels" $ | nindent 4 }}
+    dora-moved-site/tenant: {{ $tenant }}
+  {{- with $.Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with $.Values.ingress.className }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  {{- if $.Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ $host | quote }}
+      secretName: {{ $t.tlsSecretName | default (printf "%s-tls" $name) }}
+  {{- end }}
+  rules:
+    - host: {{ $host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $name }}
+                port:
+                  name: http
+{{- end }}
+{{- end }}
+{{- end }}

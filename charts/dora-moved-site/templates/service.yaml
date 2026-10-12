@@ -1,0 +1,21 @@
+{{- range $tenant, $t := .Values.tenants }}
+{{- if eq (include "dora-moved-site.enabled" $t) "true" }}
+{{- $ctx := dict "root" $ "tenant" $tenant }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "dora-moved-site.tenantName" $ctx }}
+  labels:
+    {{- include "dora-moved-site.labels" $ | nindent 4 }}
+    dora-moved-site/tenant: {{ $tenant }}
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "dora-moved-site.selectorLabels" $ctx | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ $.Values.service.port }}
+      targetPort: http
+{{- end }}
+{{- end }}
